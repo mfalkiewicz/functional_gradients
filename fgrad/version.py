@@ -65,4 +65,4 @@ MINOR = _version_minor
 MICRO = _version_micro
 VERSION = __version__
 PACKAGE_DATA = {'functional_data': [pjoin('data', '*')]}
-REQUIRES = ["numpy","mapalign","nibabel","h5py","pandas"]
+REQUIRES = ["numpy","nibabel","h5py","pandas"]
