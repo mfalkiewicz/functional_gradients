@@ -1,4 +1,4 @@
-from __future__ import print
+from __future__ import print_function
 
 def preprocess_dense_connectome(dc):
     """
