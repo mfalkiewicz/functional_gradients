@@ -7,7 +7,6 @@ def preprocess_dense_connectome(dc):
     Warning: 32k dense connectome requires ~130 GB RAM for this step.
     """
 
-    from __future__ import print
     import nibabel as nib
     import numpy as np
     from sklearn.metrics import pairwise_distances
@@ -31,7 +30,7 @@ def preprocess_dense_connectome(dc):
 
     # See if there are any negative values left
     neg_values = np.array([sum(dcon[i,:] < 0) for i in range(N)])
-    print "Negative values occur in %d rows" % sum(neg_values > 0)
+    print("Negative values occur in %d rows" % sum(neg_values > 0))
 
     # There should be very few of them, so we set them to 0 as well
     dcon[dcon < 0] = 0
