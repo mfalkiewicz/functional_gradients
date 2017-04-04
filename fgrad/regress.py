@@ -13,33 +13,47 @@ def regress_subject(f, gradients, n_jobs = 1):
         Ng x T matrix with linear regression coefficients
         """
 
+        from sklearn.linear_model import LinearRegression
+        from scipy.stats.mstats import zscore
+
+        # Load the data
         d = nib.load(f).get_data()
 
-        T = d.shape[1]
-        Ng = gradients.shape[0]
+        # Z-score
+        d_z = zscore(d, axis = 0)
 
-        m = linear_model.LinearRegression(fit_intercept=True, n_jobs = n_jobs)
-        m.fit(d.T, gradients)
+        # Regress
+        m = LinearRegression(fit_intercept=True, n_jobs = n_jobs)
+        m.fit(d_z.T, gradients)
 
-        return m.coef_
+        return m.coef_.T
 
 
 def trim_data(d, s = None):
     """
-    This function simply takes an array and removes all entries with empty rows.
+    This function removes entries from the first dimension of d that have zeros
+    anywhere in the remaining dimensions.
+
     Additionally, it can remove respective items from a list (i.e. labels).
 
     Inputs:
 
     d : data array to clean
     s : subject list to remove data from
+
+    Outputs:
+    do : cleaned data array
+    rem : removed entries
+    so : cleaned vector
     """
 
-    rem = np.where(np.sum(np.sum(d, axis = 1),axis = 1) == 0)[0]
-    do = np.delete(dr, rem, axis = 0)
+    import numpy as np
+
+    rem = np.unique(np.where(d == 0)[0])
+    do = np.delete(d, rem, axis = 0)
 
     if s is not None:
         so = np.delete(s, rem, axis = 0)
-        return do, so
+        return do, rem, so
     else:
-        return do
+        return do, rem
